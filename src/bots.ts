@@ -37,7 +37,7 @@ const lbR         = 5;
 const rangeLower  = 5;
 const rangeUpper  = 60;
 
-const runIntervalMillis = 30 * 1000; // 30 seconds
+const runIntervalMillis = 12 * 60 * 60 * 1000; // 12 hours
 
 // -----------------------------------------------------------------------------
 // HELPER - send message via Fonnte (GET style)
