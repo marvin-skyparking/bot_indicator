@@ -17,7 +17,7 @@ if (!fonnteToken || !fonnteTarget) {
   process.exit(1);
 }
 
-const timeframe = '1d';
+const timeframe = '1h';
 const symbols = [
   'BNB/USDT',
   'ETH/USDT',
@@ -37,7 +37,7 @@ const lbR         = 5;
 const rangeLower  = 5;
 const rangeUpper  = 60;
 
-const runIntervalMillis = 30 * 1000; // 30 seconds
+const runIntervalMillis = 60 * 60 * 1000; // 1 hour
 
 // -----------------------------------------------------------------------------
 // HELPER - send message via Fonnte (GET style)
