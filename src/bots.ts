@@ -37,7 +37,7 @@ const lbR         = 5;
 const rangeLower  = 5;
 const rangeUpper  = 60;
 
-const runIntervalMillis = 12 * 60 * 60 * 1000; // 12 hours
+const runIntervalMillis = 30 * 1000; // 30 seconds
 
 // -----------------------------------------------------------------------------
 // HELPER - send message via Fonnte (GET style)
@@ -114,7 +114,7 @@ async function runScan() {
       }
       if (bearAlert) {
         await sendWhatsapp(`🔴 ${symbol} → Regular Bearish Divergence detected on ${timeframe}`);
-        console.log(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`);
+        console.log(`🔴 ${symbol} → Regular Bearish Divergence detected on ${timeframe}`);
       }
 
     } catch (err) {
