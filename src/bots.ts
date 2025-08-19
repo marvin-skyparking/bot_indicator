@@ -109,9 +109,12 @@ async function runScan() {
 
       if (bullAlert) {
         await sendWhatsapp(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`);
+        console.log(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`);
+
       }
       if (bearAlert) {
         await sendWhatsapp(`🔴 ${symbol} → Regular Bearish Divergence detected on ${timeframe}`);
+        console.log(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`);
       }
 
     } catch (err) {
