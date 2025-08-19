@@ -10,6 +10,7 @@ dotenv.config();
 // -----------------------------------------------------------------------------
 const fonnteToken  = process.env.FONNTE_TOKEN;
 const fonnteTarget = process.env.FONNTE_TARGET;
+const fonnteEndpoint = process.env.FONNTE_ENDPOINT || 'https://api.fonnte.com/send';
 
 if (!fonnteToken || !fonnteTarget) {
   console.error('❌ Missing FONNTE_TOKEN or FONNTE_TARGET in .env');
@@ -39,23 +40,15 @@ const rangeUpper  = 60;
 const runIntervalMillis = 30 * 1000; // 30 seconds
 
 // -----------------------------------------------------------------------------
-// HELPER - send message via Fonnte
+// HELPER - send message via Fonnte (GET style)
 // -----------------------------------------------------------------------------
 async function sendWhatsapp(message: string) {
   try {
-    await axios.post(
-      'https://api.fonnte.com/send',
-      {
-        target: fonnteTarget,
-        message: message,
-      },
-      {
-        headers: {
-          'Authorization': fonnteToken,
-        },
-      }
-    );
+    const url = `${fonnteEndpoint}?token=${fonnteToken}&target=${fonnteTarget}&message=${encodeURIComponent(message)}`;
+    const response = await axios.get(url);
+
     console.log(`📩 Sent WhatsApp message: ${message}`);
+    console.log('   Fonnte API response:', response.data);
   } catch (error: any) {
     console.error('❌ Error sending WhatsApp:', error.response?.data || error.message);
   }
@@ -75,8 +68,8 @@ async function runScan() {
       const ohlc = await binance.fetchOHLCV(symbol, timeframe, undefined, 250);
 
       const closes = ohlc.map((c) => (c[4] !== undefined ? +c[4] : 0));
-const highs  = ohlc.map((c) => (c[2] !== undefined ? +c[2] : 0));
-const lows   = ohlc.map((c) => (c[3] !== undefined ? +c[3] : 0));
+      const highs  = ohlc.map((c) => (c[2] !== undefined ? +c[2] : 0));
+      const lows   = ohlc.map((c) => (c[3] !== undefined ? +c[3] : 0));
 
       const rsi = calculateRSI(closes, rsiPeriod);
 
