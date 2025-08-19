@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  app:
+    container_name: 'bot-saham'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      # - shared/upload_on:/app/uploads
+    environment:
+      - PORT=9000
+    ports:
+      - "9205:9000"
+    # command: npm install cookie-parser && npm start
+    networks:
+      - bot-saham
+
+volumes:
+  node_modules:
+
+networks:
+  bot-saham:
+    driver: bridge
