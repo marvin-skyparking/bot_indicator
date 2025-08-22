@@ -23,23 +23,29 @@ const symbols = [
 ];
 
 const fonnteToken  = process.env.FONNTE_TOKEN;
-const fonnteTarget = process.env.FONNTE_TARGET;
 const fonnteEndpoint = process.env.FONNTE_ENDPOINT || 'https://api.fonnte.com/send';
 
-if (!fonnteToken || !fonnteTarget) {
-  console.error('❌ Missing FONNTE_TOKEN or FONNTE_TARGET in .env');
+// Targets can be comma-separated in .env
+const fonnteTargets = process.env.FONNTE_TARGETS
+  ? process.env.FONNTE_TARGETS.split(',').map((t) => t.trim())
+  : [];
+
+if (!fonnteToken || fonnteTargets.length === 0) {
+  console.error('❌ Missing FONNTE_TOKEN or FONNTE_TARGETS in .env');
   process.exit(1);
 }
 
 // -----------------------------------------------------------------------------
 // HELPER - send message via Fonnte (GET style)
 // -----------------------------------------------------------------------------
-async function sendWhatsapp(message: string) {
+async function sendWhatsapp(message: string, targets: string[]) {
   try {
-    const url = `${fonnteEndpoint}?token=${fonnteToken}&target=${fonnteTarget}&message=${encodeURIComponent(message)}`;
-    const response = await axios.get(url);
-    console.log(`📩 Sent WhatsApp message: ${message}`);
-    console.log('   Fonnte API response:', response.data);
+    for (const target of targets) {
+      const url = `${fonnteEndpoint}?token=${fonnteToken}&target=${target}&message=${encodeURIComponent(message)}`;
+      const response = await axios.get(url);
+      console.log(`📩 Sent WhatsApp message to ${target}: ${message}`);
+      console.log('   Fonnte API response:', response.data);
+    }
   } catch (error: any) {
     console.error('❌ Error sending WhatsApp:', error.response?.data || error.message);
   }
@@ -138,10 +144,10 @@ async function runScan() {
       const bearAlert = phFound && oscLH && priceHH;
 
       if (bullAlert) {
-        await sendWhatsapp(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`);
+        await sendWhatsapp(`🟢 ${symbol} → Regular Bullish Divergence detected on ${timeframe}`, fonnteTargets);
       }
       if (bearAlert) {
-        await sendWhatsapp(`🔴 ${symbol} → Regular Bearish Divergence detected on ${timeframe}`);
+        await sendWhatsapp(`🔴 ${symbol} → Regular Bearish Divergence detected on ${timeframe}`, fonnteTargets);
       }
 
     } catch (err) {
